@@ -128,7 +128,7 @@
       overflow: hidden;
     }
     .keyboard-button img {
-      width: 75%;
+      width: 100%;
       height: auto;
       object-fit: cover;
       border-radius: 5px;
@@ -136,22 +136,6 @@
     .keyboard-button:hover {
       transform: scale(1.05);
       background-color: #ddd;
-    }
-
-    /* iPhone向けの調整 */
-    @media (max-width: 430px) {
-      .field-slot, .field-card {
-        width: calc(100vw / 8 - 10px);
-        height: auto;
-      }
-      .keyboard-container {
-        grid-template-columns: repeat(14, 1fr);
-        gap: 2px;
-        padding: 5px;
-      }
-      .keyboard-button {
-        max-width: calc(100vw / 14 - 4px);
-      }
     }
   </style>
 </head>
@@ -240,19 +224,16 @@
       const rows = fieldBox.querySelectorAll('.field-row');
       for (let row of rows) {
         if (row.children.length < currentColumns) {
-          const slot = row.querySelector('.field-slot');
-          if (slot) {
-            const cardElement = document.createElement('div');
-            cardElement.classList.add('field-card');
+          const slot = document.createElement('div');
+          slot.classList.add('field-card');
 
-            const img = document.createElement('img');
-            img.src = card.画像;
-            img.alt = card.カード名;
+          const img = document.createElement('img');
+          img.src = card.画像;
+          img.alt = card.カード名;
 
-            cardElement.appendChild(img);
-            row.replaceChild(cardElement, slot);
-            return;
-          }
+          slot.appendChild(img);
+          row.appendChild(slot);
+          return;
         }
       }
     }
