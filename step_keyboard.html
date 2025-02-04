@@ -78,12 +78,12 @@
       flex: 1;
       overflow-x: auto;
       padding: 5px;
-      margin-bottom: 110px; /* キーボードとの重なりを防ぐために余白追加 */
+      margin-bottom: 110px;
     }
     .field-box {
       display: grid;
-      grid-template-rows: repeat(4, 80px); /* 高さを詰める */
-      gap: 8px; /* 段落幅を詰める */
+      grid-template-rows: repeat(4, 80px);
+      gap: 8px;
       border: 2px solid #ccc;
       border-radius: 10px;
       padding: 8px;
@@ -93,7 +93,7 @@
     }
     .field-row {
       display: grid;
-      gap: 8px; /* 横の隙間も詰める */
+      gap: 8px;
     }
     .field-slot, .field-card {
       background-color: #e0e0e0;
@@ -126,8 +126,8 @@
     .keyboard-container {
       display: grid;
       grid-template-columns: repeat(14, 1fr);
-      grid-template-rows: repeat(4, 80px); /* 高さを調整 */
-      gap: 8px; /* 段落幅も詰める */
+      grid-template-rows: repeat(4, 80px);
+      gap: 8px;
       padding: 8px;
       justify-content: center;
       background-color: #444;
@@ -164,7 +164,7 @@
     }
     @media (max-width: 768px) {
       .field-box {
-        grid-template-rows: repeat(4, 60px); /* スマホ表示時の高さ調整 */
+        grid-template-rows: repeat(4, 60px);
         width: calc(100% - 10px);
       }
       .field-slot, .field-card {
@@ -196,6 +196,8 @@
     <p class="menu-title">ステップキーボード</p>
     <button class="menu-button" onclick="window.location.href='index.html'">カードライブラリーへ戻る</button>
     <button class="menu-button" onclick="window.location.href='https://noritap.github.io/tapdance-cardgame/'">タイトル画面に戻る</button>
+    <button class="menu-button" onclick="saveCombination()">保存</button>
+    <button class="menu-button" onclick="window.location.href='practice.html'">練習モード</button>
   </div>
 
   <div class="pattern-selector">
@@ -355,6 +357,12 @@
           row.appendChild(slot);
         }
       });
+    }
+
+    function saveCombination() {
+      const cards = Array.from(document.querySelectorAll('.field-card img')).map(img => img.src);
+      localStorage.setItem('savedCombination', JSON.stringify(cards));
+      alert('カードの並びを保存しました！');
     }
   </script>
 </body>
