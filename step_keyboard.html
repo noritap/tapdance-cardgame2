@@ -56,12 +56,11 @@
       align-items: flex-start;
       flex: 1;
       overflow-x: auto;
-      overflow-y: auto;
       padding: 10px;
     }
     .field-box {
       display: grid;
-      grid-template-rows: repeat(auto-fill, 80px);
+      grid-template-rows: repeat(4, 80px);
       gap: 10px;
       border: 2px solid #ccc;
       border-radius: 10px;
@@ -76,8 +75,8 @@
       background-color: #e0e0e0;
       border: 2px dashed #bbb;
       border-radius: 10px;
-      width: 100%;
-      aspect-ratio: 3 / 4;
+      width: 60px;
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -87,8 +86,8 @@
       background-color: white;
       border: 1px solid #ddd;
       border-radius: 10px;
-      width: 100%;
-      aspect-ratio: 3 / 4;
+      width: 60px;
+      height: 80px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
@@ -108,7 +107,7 @@
       padding: 10px;
       justify-items: center;
       background-color: #444;
-      position: sticky;
+      position: fixed;
       bottom: 0;
       width: 100%;
       box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
@@ -137,16 +136,6 @@
     .keyboard-button:hover {
       transform: scale(1.05);
       background-color: #ddd;
-    }
-    @media (max-width: 768px) {
-      .field-slot, .field-card {
-        width: calc(100vw / 6 - 20px);
-      }
-    }
-    @media (max-width: 480px) {
-      .field-slot, .field-card {
-        width: calc(100vw / 4 - 20px);
-      }
     }
   </style>
 </head>
@@ -246,7 +235,6 @@
 
             cardElement.appendChild(img);
             row.replaceChild(cardElement, slot);
-            adjustKeyboardPosition();
             return;
           }
         }
@@ -275,19 +263,6 @@
           row.appendChild(slot);
         }
       });
-    }
-
-    function adjustKeyboardPosition() {
-      const fieldWrapper = document.querySelector('.field-wrapper');
-      const keyboardContainer = document.querySelector('.keyboard-container');
-      const fieldHeight = fieldWrapper.scrollHeight;
-      const viewportHeight = window.innerHeight;
-
-      if (fieldHeight + 150 > viewportHeight) {
-        keyboardContainer.style.position = 'relative';
-      } else {
-        keyboardContainer.style.position = 'sticky';
-      }
     }
   </script>
 </body>
