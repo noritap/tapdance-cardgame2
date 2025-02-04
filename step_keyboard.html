@@ -54,11 +54,17 @@
       border: 1px solid #ddd;
       border-radius: 10px;
       width: 100%;
-      max-width: 80px;
+      max-width: 60px; /* カードサイズを縮小 */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .field-card img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 10px;
     }
     .keyboard-container {
       display: grid;
@@ -85,6 +91,13 @@
       justify-content: center;
       cursor: pointer;
       transition: transform 0.2s;
+      overflow: hidden;
+    }
+    .keyboard-button img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-radius: 5px;
     }
     .keyboard-button:hover {
       transform: scale(1.05);
@@ -127,8 +140,8 @@
       rows.forEach(row => {
         columns.forEach(col => {
           const button = document.createElement('div');
-          button.textContent = `${row}${col}`;
           button.classList.add('keyboard-button');
+          button.dataset.label = `${row}${col}`; // データ属性でラベルを保存
           keyboardContainer.appendChild(button);
         });
       });
@@ -147,10 +160,15 @@
     // ボタンとカードを対応付ける関数
     function mapCardsToButtons(cards) {
       document.querySelectorAll('.keyboard-button').forEach(button => {
-        const cardId = buttonMapping[button.textContent];
+        const cardId = buttonMapping[button.dataset.label];
         const card = cards.find(c => c.カードID === cardId);
 
         if (card) {
+          const img = document.createElement('img');
+          img.src = card.画像;
+          img.alt = card.カード名;
+          button.appendChild(img);
+
           button.addEventListener('click', () => addCardToField(card));
         }
       });
