@@ -60,23 +60,25 @@
     }
     .field-box {
       display: grid;
-      grid-template-rows: repeat(4, 80px);
-      gap: 8px;
+      grid-template-rows: repeat(4, 100px);
+      gap: 10px;
       border: 2px solid #ccc;
       border-radius: 10px;
-      padding: 8px;
+      padding: 10px;
       background-color: #fff;
+      width: calc(100% - 40px);
+      max-width: 800px;
     }
     .field-row {
       display: grid;
-      gap: 6px;
+      gap: 8px;
     }
     .field-slot {
       background-color: #e0e0e0;
       border: 2px dashed #bbb;
       border-radius: 10px;
-      width: 60px;
-      height: 80px;
+      width: 90px;
+      height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -86,8 +88,8 @@
       background-color: white;
       border: 1px solid #ddd;
       border-radius: 10px;
-      width: 60px;
-      height: 80px;
+      width: 90px;
+      height: 100px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
@@ -102,14 +104,15 @@
     .keyboard-container {
       display: grid;
       grid-template-columns: repeat(14, 1fr);
-      grid-template-rows: repeat(4, 60px);
-      gap: 2px; /* ボタン間の段落幅を詰める */
-      padding: 5px;
+      grid-template-rows: repeat(4, 70px);
+      gap: 4px;
+      padding: 10px;
       justify-content: center;
       background-color: #444;
       position: fixed;
       bottom: 0;
-      width: auto;
+      width: calc(100% - 20px);
+      max-width: 900px;
       margin: 0 auto;
       box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
       overflow-x: auto;
@@ -118,8 +121,8 @@
       background-color: #eee;
       border: 1px solid #ccc;
       border-radius: 5px;
-      width: 40px;
-      height: 45px;
+      width: 55px;
+      height: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -128,8 +131,8 @@
       overflow: hidden;
     }
     .keyboard-button img {
-      width: 75%;  /* 幅75%に設定 */
-      height: 75%; /* 高さ75%に設定 */
+      width: 75%;
+      height: 75%;
       object-fit: contain;
       border-radius: 5px;
     }
@@ -138,20 +141,28 @@
       background-color: #ddd;
     }
 
-    /* iPhone 15 Pro Max対応のサイズ調整 */
-    @media (max-width: 932px) {
+    /* スマホ表示対応のサイズ調整 */
+    @media (max-width: 768px) {
+      .field-box {
+        grid-template-rows: repeat(4, 80px);
+        width: calc(100% - 20px);
+      }
+      .field-slot, .field-card {
+        width: calc((100vw - 80px) / 8);
+        height: calc(((100vw - 80px) / 8) * 1.33);
+      }
       .keyboard-container {
-        grid-template-columns: repeat(14, minmax(25px, 1fr));
-        gap: 1px; /* さらに段落幅を詰める */
-        justify-content: center;
+        grid-template-columns: repeat(14, minmax(30px, 1fr));
+        gap: 2px;
+        width: calc(100% - 10px);
       }
       .keyboard-button {
-        width: 35px;
-        height: 40px;
+        width: 45px;
+        height: 60px;
       }
       .keyboard-button img {
-        width: 75%;
-        height: 75%;
+        width: 70%;
+        height: 70%;
       }
     }
   </style>
@@ -171,7 +182,7 @@
       <option value="16">上級者 (16枚)</option>
       <option value="custom">カスタム</option>
     </select>
-    <input type="number" id="custom-columns" min="1" max="16" value="4" style="display:none;" onchange="updateFieldPattern()">
+    <input type="number" id="custom-columns" min="1" max="16" value="8" style="display:none;" onchange="updateFieldPattern()">
   </div>
 
   <div class="field-wrapper">
@@ -197,7 +208,7 @@
       .catch(error => console.error('データの読み込みに失敗しました:', error));
 
     const fieldBox = document.getElementById('field-box');
-    let currentColumns = 4;
+    let currentColumns = 8;
 
     function createKeyboard() {
       const rows = ['A', 'B', 'C', 'D'];
