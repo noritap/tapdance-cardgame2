@@ -224,19 +224,16 @@
       const rows = fieldBox.querySelectorAll('.field-row');
       for (let row of rows) {
         if (row.children.length < currentColumns) {
-          const slot = row.querySelector('.field-slot');
-          if (slot) {
-            const cardElement = document.createElement('div');
-            cardElement.classList.add('field-card');
+          const cardElement = document.createElement('div');
+          cardElement.classList.add('field-card');
 
-            const img = document.createElement('img');
-            img.src = card.画像;
-            img.alt = card.カード名;
+          const img = document.createElement('img');
+          img.src = card.画像;
+          img.alt = card.カード名;
 
-            cardElement.appendChild(img);
-            row.replaceChild(cardElement, slot);
-            return;
-          }
+          cardElement.appendChild(img);
+          row.appendChild(cardElement);
+          return;
         }
       }
     }
