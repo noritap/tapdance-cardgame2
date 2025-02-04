@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>カードライブラリー</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,64 +39,62 @@
     }
     #card-container {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 20px;
       padding: 20px;
       justify-items: center;
     }
-    .step-keyboard {
-      display: flex;
-      justify-content: space-around;
-      padding: 20px;
-    }
-    .step-section {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      width: 45%;
-      background-color: #fff;
-      padding: 10px;
+    .card {
+      background-color: white;
+      border: 1px solid #ddd;
       border-radius: 10px;
+      width: 100%;
+      max-width: 200px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .step-card {
-      background-color: #eee;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 10px;
-      cursor: pointer;
       transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
     }
-    .step-card:hover {
+    .card:hover {
       transform: scale(1.05);
-      background-color: #ddd;
     }
-    #field {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      padding: 20px;
-      background-color: #fafafa;
-      border-top: 2px solid #ccc;
+    .card img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
     }
-    .field-card {
-      background-color: #ddd;
-      border: 1px solid #bbb;
-      border-radius: 5px;
+    .card-content {
       padding: 10px;
-      position: relative;
+      text-align: left;
     }
-    .remove-btn {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
+    .card h3 {
+      margin: 10px 0 5px;
+      font-size: 1em;
+    }
+    .card p {
+      font-size: 0.8em;
+      color: #555;
+      margin: 5px 0;
+    }
+    @media (max-width: 600px) {
+      #card-container {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+      }
+      .card {
+        max-width: 150px;
+      }
+      .card-content {
+        padding: 8px;
+      }
+      .card h3 {
+        font-size: 0.9em;
+      }
+      .card p {
+        font-size: 0.7em;
+      }
     }
     .back-to-home {
       position: fixed;
