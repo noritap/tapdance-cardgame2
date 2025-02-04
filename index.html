@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>カードライブラリー</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,38 +17,18 @@
       padding: 20px 0;
       margin: 0;
     }
-    .menu-bar {
-      display: flex;
-      justify-content: center;
-      background-color: #444;
-      padding: 10px 0;
-    }
-    .menu-button {
-      background-color: #555;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 0 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    .menu-button:hover {
-      background-color: #777;
-    }
     #card-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 10px;
-      padding: 10px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 20px;
       justify-items: center;
     }
     .card {
       background-color: white;
       border: 1px solid #ddd;
       border-radius: 10px;
-      width: 100%;
-      max-width: 100px;
+      width: 200px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s;
       display: flex;
@@ -66,36 +45,18 @@
       border-top-right-radius: 10px;
     }
     .card-content {
-      padding: 5px;
+      padding: 15px;
       text-align: left;
     }
     .card h3 {
-      margin: 5px 0 3px;
-      font-size: 0.8em;
+      margin: 10px 0 5px;
     }
     .card p {
-      font-size: 0.6em;
+      font-size: 0.9em;
       color: #555;
-      margin: 3px 0;
+      margin: 5px 0;
     }
-    @media (max-width: 600px) {
-      #card-container {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-        gap: 5px;
-      }
-      .card {
-        max-width: 80px;
-      }
-      .card-content {
-        padding: 4px;
-      }
-      .card h3 {
-        font-size: 0.7em;
-      }
-      .card p {
-        font-size: 0.5em;
-      }
-    }
+    /* 戻るボタンのスタイル */
     .back-to-home {
       position: fixed;
       top: 50%;
@@ -119,39 +80,19 @@
 </head>
 <body>
   <h1>カードライブラリー</h1>
-  <div class="menu-bar">
-    <button class="menu-button" onclick="showLibrary()">カードライブラリー</button>
-    <button class="menu-button" onclick="showStepKeyboard()">ステップキーボード</button>
-    <button class="menu-button" onclick="toggleFieldSize()">フィールドサイズ切替 (4x/8x)</button>
-  </div>
-
   <div id="card-container"></div>
-  <div id="step-keyboard-container" style="display:none;">
-    <div class="step-keyboard">
-      <div class="step-section" id="left-foot"></div>
-      <div class="step-section" id="right-foot"></div>
-    </div>
-    <div id="field"></div>
-  </div>
 
+  <!-- 戻るボタン -->
   <button class="back-to-home" onclick="window.location.href='https://noritap.github.io/tapdance-cardgame/'">タイトル画面に戻る</button>
 
   <script>
-    let fieldSize = 4;
-
     fetch('./tap_dance_card_data_updated.json')
       .then(response => response.json())
-      .then(data => {
-        window.cardData = data;
-        displayCards(data);
-      })
+      .then(data => displayCards(data))
       .catch(error => console.error('データの読み込みに失敗しました:', error));
 
     function displayCards(cards) {
       const container = document.getElementById('card-container');
-      container.style.display = 'grid';
-      document.getElementById('step-keyboard-container').style.display = 'none';
-      container.innerHTML = '';
 
       cards.forEach(card => {
         const cardElement = document.createElement('div');
@@ -186,69 +127,6 @@
 
         container.appendChild(cardElement);
       });
-    }
-
-    function showLibrary() {
-      document.getElementById('card-container').style.display = 'grid';
-      document.getElementById('step-keyboard-container').style.display = 'none';
-    }
-
-    function showStepKeyboard() {
-      document.getElementById('card-container').style.display = 'none';
-      const keyboardContainer = document.getElementById('step-keyboard-container');
-      keyboardContainer.style.display = 'block';
-
-      const leftFoot = document.getElementById('left-foot');
-      const rightFoot = document.getElementById('right-foot');
-      leftFoot.innerHTML = '';
-      rightFoot.innerHTML = '';
-
-      window.cardData.forEach(card => {
-        if (card[' 足の種類'] === 'left') {
-          createStepCard(leftFoot, card);
-        } else if (card[' 足の種類'] === 'right') {
-          createStepCard(rightFoot, card);
-        }
-      });
-    }
-
-    function createStepCard(container, card) {
-      const stepCard = document.createElement('div');
-      stepCard.classList.add('step-card');
-      stepCard.textContent = `${card.部位} - ${card.動作}`;
-
-      stepCard.addEventListener('click', () => {
-        addToField(card);
-      });
-
-      container.appendChild(stepCard);
-    }
-
-    function addToField(card) {
-      const field = document.getElementById('field');
-      const fieldCard = document.createElement('div');
-      fieldCard.classList.add('field-card');
-      fieldCard.textContent = `${card.部位} - ${card.動作}`;
-
-      const removeBtn = document.createElement('button');
-      removeBtn.textContent = '×';
-      removeBtn.classList.add('remove-btn');
-      removeBtn.onclick = () => field.removeChild(fieldCard);
-
-      fieldCard.appendChild(removeBtn);
-      field.appendChild(fieldCard);
-
-      adjustFieldLayout();
-    }
-
-    function adjustFieldLayout() {
-      const field = document.getElementById('field');
-      field.style.gridTemplateColumns = `repeat(${fieldSize}, 1fr)`;
-    }
-
-    function toggleFieldSize() {
-      fieldSize = fieldSize === 4 ? 8 : 4;
-      adjustFieldLayout();
     }
   </script>
 </body>
