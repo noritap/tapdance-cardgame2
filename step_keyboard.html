@@ -103,7 +103,7 @@
       display: grid;
       grid-template-columns: repeat(14, 1fr);
       grid-template-rows: repeat(4, 60px);
-      gap: 3px;
+      gap: 2px; /* ボタン間の段落幅を詰める */
       padding: 5px;
       justify-content: center;
       background-color: #444;
@@ -128,8 +128,8 @@
       overflow: hidden;
     }
     .keyboard-button img {
-      width: 75%;
-      height: auto;
+      width: 75%;  /* 幅75%に設定 */
+      height: 75%; /* 高さ75%に設定 */
       object-fit: contain;
       border-radius: 5px;
     }
@@ -142,7 +142,7 @@
     @media (max-width: 932px) {
       .keyboard-container {
         grid-template-columns: repeat(14, minmax(25px, 1fr));
-        gap: 2px;
+        gap: 1px; /* さらに段落幅を詰める */
         justify-content: center;
       }
       .keyboard-button {
@@ -150,7 +150,8 @@
         height: 40px;
       }
       .keyboard-button img {
-        width: 70%;
+        width: 75%;
+        height: 75%;
       }
     }
   </style>
