@@ -61,15 +61,15 @@
     .field-box {
       display: grid;
       grid-template-rows: repeat(4, 80px);
-      gap: 10px;
+      gap: 8px; /* 間隔を少し詰める */
       border: 2px solid #ccc;
       border-radius: 10px;
-      padding: 10px;
+      padding: 8px; /* 全体の余白も少し詰める */
       background-color: #fff;
     }
     .field-row {
       display: grid;
-      gap: 10px;
+      gap: 6px; /* 横のカード間隔を詰める */
     }
     .field-slot {
       background-color: #e0e0e0;
@@ -141,8 +141,15 @@
     /* iPhone対応のサイズ調整 */
     @media (max-width: 768px) {
       .field-slot, .field-card {
-        width: calc((100vw - 80px) / 8);
-        height: calc(((100vw - 80px) / 8) * 1.33);
+        width: calc((100vw - 70px) / 8); /* 間隔を詰めて8枚収める */
+        height: calc(((100vw - 70px) / 8) * 1.33);
+      }
+      .field-box {
+        gap: 6px;
+        padding: 6px;
+      }
+      .field-row {
+        gap: 4px;
       }
     }
   </style>
