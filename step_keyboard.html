@@ -71,6 +71,17 @@
       display: grid;
       gap: 10px;
     }
+    .field-slot {
+      background-color: #e0e0e0;
+      border: 2px dashed #bbb;
+      border-radius: 10px;
+      width: 60px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
     .field-card {
       background-color: white;
       border: 1px solid #ddd;
@@ -212,17 +223,20 @@
     function addCardToField(card) {
       const rows = fieldBox.querySelectorAll('.field-row');
       for (let row of rows) {
-        if (row.children.length < currentColumns) {
-          const cardElement = document.createElement('div');
-          cardElement.classList.add('field-card');
+        const slots = row.querySelectorAll('.field-slot');
+        for (let slot of slots) {
+          if (!slot.hasChildNodes()) {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('field-card');
 
-          const img = document.createElement('img');
-          img.src = card.画像;
-          img.alt = card.カード名;
+            const img = document.createElement('img');
+            img.src = card.画像;
+            img.alt = card.カード名;
 
-          cardElement.appendChild(img);
-          row.appendChild(cardElement);
-          return;
+            cardElement.appendChild(img);
+            slot.replaceWith(cardElement);
+            return;
+          }
         }
       }
     }
@@ -243,6 +257,11 @@
       rows.forEach(row => {
         row.innerHTML = '';
         row.style.gridTemplateColumns = `repeat(${currentColumns}, 1fr)`;
+        for (let i = 0; i < currentColumns; i++) {
+          const slot = document.createElement('div');
+          slot.classList.add('field-slot');
+          row.appendChild(slot);
+        }
       });
     }
   </script>
