@@ -137,6 +137,14 @@
       transform: scale(1.05);
       background-color: #ddd;
     }
+
+    /* iPhone対応のサイズ調整 */
+    @media (max-width: 768px) {
+      .field-slot, .field-card {
+        width: calc((100vw - 80px) / 8);
+        height: calc(((100vw - 80px) / 8) * 1.33);
+      }
+    }
   </style>
 </head>
 <body>
