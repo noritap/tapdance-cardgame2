@@ -78,43 +78,6 @@
       color: #555;
       margin: 3px 0;
     }
-    .step-keyboard {
-      display: flex;
-      justify-content: space-around;
-      padding: 20px;
-    }
-    .step-section {
-      display: grid;
-      grid-template-rows: repeat(4, 1fr);
-      gap: 10px;
-      width: 45%;
-      background-color: #fff;
-      padding: 10px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .step-row {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-    }
-    .step-card {
-      background-color: #eee;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 5px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .step-card img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-    }
-    .step-card:hover {
-      transform: scale(1.05);
-      background-color: #ddd;
-    }
     .back-to-home {
       position: fixed;
       top: 50%;
@@ -139,45 +102,21 @@
 <body>
   <h1>カードライブラリー</h1>
   <div class="menu-bar">
-    <button class="menu-button" onclick="showLibrary()">カードライブラリー</button>
-    <button class="menu-button" onclick="showStepKeyboard()">ステップキーボード</button>
+    <button class="menu-button" onclick="window.location.href='step_keyboard.html'">ステップキーボードへ</button>
   </div>
 
   <div id="card-container"></div>
-  <div id="step-keyboard-container" style="display:none;">
-    <div class="step-keyboard">
-      <!-- 左ブロック -->
-      <div class="step-section" id="left-foot">
-        <div class="step-row" id="left-ball-row"></div>
-        <div class="step-row" id="left-heel-row"></div>
-        <div class="step-row" id="left-toe-row"></div>
-        <div class="step-row" id="left-stamp-row"></div>
-      </div>
-      <!-- 右ブロック -->
-      <div class="step-section" id="right-foot">
-        <div class="step-row" id="right-ball-row"></div>
-        <div class="step-row" id="right-heel-row"></div>
-        <div class="step-row" id="right-toe-row"></div>
-        <div class="step-row" id="right-stamp-row"></div>
-      </div>
-    </div>
-  </div>
 
   <button class="back-to-home" onclick="window.location.href='https://noritap.github.io/tapdance-cardgame/'">タイトル画面に戻る</button>
 
   <script>
     fetch('./tap_dance_card_data_updated.json')
       .then(response => response.json())
-      .then(data => {
-        window.cardData = data;
-        displayCards(data);
-      })
+      .then(data => displayCards(data))
       .catch(error => console.error('データの読み込みに失敗しました:', error));
 
     function displayCards(cards) {
       const container = document.getElementById('card-container');
-      container.style.display = 'grid';
-      document.getElementById('step-keyboard-container').style.display = 'none';
       container.innerHTML = '';
 
       cards.forEach(card => {
@@ -213,53 +152,6 @@
 
         container.appendChild(cardElement);
       });
-    }
-
-    function showLibrary() {
-      document.getElementById('card-container').style.display = 'grid';
-      document.getElementById('step-keyboard-container').style.display = 'none';
-    }
-
-    function showStepKeyboard() {
-      document.getElementById('card-container').style.display = 'none';
-      const keyboardContainer = document.getElementById('step-keyboard-container');
-      keyboardContainer.style.display = 'flex';
-
-      const leftRows = {
-        'ball': document.getElementById('left-ball-row'),
-        'heel (stand)': document.getElementById('left-heel-row'),
-        'toe': document.getElementById('left-toe-row'),
-        'stamp': document.getElementById('left-stamp-row')
-      };
-
-      const rightRows = {
-        'ball': document.getElementById('right-ball-row'),
-        'heel (stand)': document.getElementById('right-heel-row'),
-        'toe': document.getElementById('right-toe-row'),
-        'stamp': document.getElementById('right-stamp-row')
-      };
-
-      window.cardData.forEach(card => {
-        if (card[' 足の種類'] === 'left' && leftRows[card['部位']]) {
-          const cardElement = createStepCard(card);
-          leftRows[card['部位']].appendChild(cardElement);
-        } else if (card[' 足の種類'] === 'right' && rightRows[card['部位']]) {
-          const cardElement = createStepCard(card);
-          rightRows[card['部位']].appendChild(cardElement);
-        }
-      });
-    }
-
-    function createStepCard(card) {
-      const cardElement = document.createElement('div');
-      cardElement.classList.add('step-card');
-
-      const img = document.createElement('img');
-      img.src = card.画像;
-      img.alt = card.カード名;
-
-      cardElement.appendChild(img);
-      return cardElement;
     }
   </script>
 </body>
