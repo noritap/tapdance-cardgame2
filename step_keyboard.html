@@ -61,7 +61,7 @@
     .field-box {
       display: grid;
       grid-template-rows: repeat(4, 100px);
-      gap: 10px;
+      gap: 12px; /* 縦の段落幅を最適化 */
       border: 2px solid #ccc;
       border-radius: 10px;
       padding: 10px;
@@ -71,9 +71,9 @@
     }
     .field-row {
       display: grid;
-      gap: 8px;
+      gap: 10px; /* 横の段落幅も調整 */
     }
-    .field-slot {
+    .field-slot, .field-card {
       background-color: #e0e0e0;
       border: 2px dashed #bbb;
       border-radius: 10px;
@@ -87,13 +87,7 @@
     .field-card {
       background-color: white;
       border: 1px solid #ddd;
-      border-radius: 10px;
-      width: 100%;
-      height: 100%;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
     .field-card img {
       width: 100%;
@@ -104,8 +98,8 @@
     .keyboard-container {
       display: grid;
       grid-template-columns: repeat(14, 1fr);
-      grid-template-rows: repeat(4, 70px);
-      gap: 4px;
+      grid-template-rows: repeat(4, 100px); /* 高さをフィールドと一致させる */
+      gap: 10px; /* 段落幅もフィールドと一致 */
       padding: 10px;
       justify-content: center;
       background-color: #444;
@@ -120,9 +114,9 @@
     .keyboard-button {
       background-color: #eee;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 55px;
-      height: 70px;
+      border-radius: 10px;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -131,10 +125,10 @@
       overflow: hidden;
     }
     .keyboard-button img {
-      width: 75%;
-      height: 75%;
+      width: 100%;
+      height: auto;
       object-fit: contain;
-      border-radius: 5px;
+      border-radius: 10px;
     }
     .keyboard-button:hover {
       transform: scale(1.05);
@@ -153,16 +147,17 @@
       }
       .keyboard-container {
         grid-template-columns: repeat(14, minmax(30px, 1fr));
-        gap: 2px;
+        grid-template-rows: repeat(4, 80px); /* 高さをフィールドと一致 */
+        gap: 8px; /* スマホ用の段落幅調整 */
         width: calc(100% - 10px);
       }
       .keyboard-button {
-        width: 45px;
-        height: 60px;
+        width: 100%;
+        height: 100%;
       }
       .keyboard-button img {
-        width: 70%;
-        height: 70%;
+        width: 100%;
+        height: auto;
       }
     }
   </style>
