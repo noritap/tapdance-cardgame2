@@ -42,7 +42,7 @@
     }
     #field-container {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
       gap: 10px;
       padding: 20px;
       justify-items: center;
@@ -54,7 +54,7 @@
       border: 1px solid #ddd;
       border-radius: 10px;
       width: 100%;
-      max-width: 60px;
+      max-width: 80px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
@@ -65,6 +65,24 @@
       height: auto;
       object-fit: cover;
       border-radius: 10px;
+    }
+    @media (max-width: 768px) {
+      #field-container {
+        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+        gap: 5px;
+      }
+      .field-card {
+        max-width: 60px;
+      }
+    }
+    @media (max-width: 480px) {
+      #field-container {
+        grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+        gap: 5px;
+      }
+      .field-card {
+        max-width: 50px;
+      }
     }
     .keyboard-container {
       display: grid;
@@ -78,6 +96,7 @@
       bottom: 0;
       width: 100%;
       box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+      overflow-x: auto;
     }
     .keyboard-button {
       background-color: #eee;
@@ -141,7 +160,7 @@
         columns.forEach(col => {
           const button = document.createElement('div');
           button.classList.add('keyboard-button');
-          button.dataset.label = `${row}${col}`; // データ属性でラベルを保存
+          button.dataset.label = `${row}${col}`;
           keyboardContainer.appendChild(button);
         });
       });
