@@ -15,17 +15,12 @@
       flex-direction: column;
       height: 100vh;
     }
-    h1 {
-      background-color: #333;
-      color: white;
-      padding: 20px 0;
-      margin: 0;
-    }
     .menu-bar {
       display: flex;
+      align-items: center;
       justify-content: center;
       background-color: #444;
-      padding: 10px 0;
+      padding: 10px;
       gap: 10px;
     }
     .menu-button {
@@ -40,21 +35,27 @@
     .menu-button:hover {
       background-color: #777;
     }
+    .menu-title {
+      color: white;
+      font-size: 1.2rem;
+      margin: 0;
+    }
     #field-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 10px;
       padding: 20px;
       justify-items: center;
       flex: 1;
       overflow-y: auto;
+      padding-bottom: 100px; /* キーボードの高さ分余白を確保 */
     }
     .field-card {
       background-color: white;
       border: 1px solid #ddd;
       border-radius: 10px;
       width: 100%;
-      max-width: 80px;
+      max-width: 60px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       align-items: center;
@@ -65,24 +66,6 @@
       height: auto;
       object-fit: cover;
       border-radius: 10px;
-    }
-    @media (max-width: 768px) {
-      #field-container {
-        grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-        gap: 5px;
-      }
-      .field-card {
-        max-width: 60px;
-      }
-    }
-    @media (max-width: 480px) {
-      #field-container {
-        grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
-        gap: 5px;
-      }
-      .field-card {
-        max-width: 50px;
-      }
     }
     .keyboard-container {
       display: grid;
@@ -122,16 +105,33 @@
       transform: scale(1.05);
       background-color: #ddd;
     }
+    .pattern-selector {
+      margin: 10px 0;
+    }
+    .pattern-selector label, .pattern-selector select, .pattern-selector input {
+      font-size: 1rem;
+      margin: 5px;
+    }
   </style>
 </head>
 <body>
-  <h1>ステップキーボード</h1>
   <div class="menu-bar">
+    <p class="menu-title">ステップキーボード</p>
     <button class="menu-button" onclick="window.location.href='index.html'">カードライブラリーへ戻る</button>
     <button class="menu-button" onclick="window.location.href='https://noritap.github.io/tapdance-cardgame/'">タイトル画面に戻る</button>
   </div>
 
-  <h2>フィールド</h2>
+  <div class="pattern-selector">
+    <label for="pattern">フィールドパターン:</label>
+    <select id="pattern" onchange="updateFieldPattern()">
+      <option value="4">初心者 (4枚)</option>
+      <option value="8">中級者 (8枚)</option>
+      <option value="16">上級者 (16枚)</option>
+      <option value="custom">カスタム</option>
+    </select>
+    <input type="number" id="custom-columns" min="1" max="16" value="4" style="display:none;" onchange="updateFieldPattern()">
+  </div>
+
   <div id="field-container"></div>
 
   <div class="keyboard-container" id="keyboard-container"></div>
@@ -148,6 +148,7 @@
       .catch(error => console.error('データの読み込みに失敗しました:', error));
 
     const fieldContainer = document.getElementById('field-container');
+    let currentColumns = 4; // デフォルトは4列
 
     // キーボードのボタンを生成
     function createKeyboard() {
@@ -210,6 +211,21 @@
 
       cardElement.appendChild(img);
       fieldContainer.appendChild(cardElement);
+    }
+
+    // フィールドパターンを更新する関数
+    function updateFieldPattern() {
+      const pattern = document.getElementById('pattern').value;
+      const customInput = document.getElementById('custom-columns');
+
+      if (pattern === 'custom') {
+        customInput.style.display = 'inline';
+        currentColumns = parseInt(customInput.value);
+      } else {
+        customInput.style.display = 'none';
+        currentColumns = parseInt(pattern);
+      }
+      fieldContainer.style.gridTemplateColumns = `repeat(${currentColumns}, 1fr)`;
     }
   </script>
 </body>
