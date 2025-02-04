@@ -101,7 +101,7 @@
     }
     .keyboard-container {
       display: grid;
-      grid-template-columns: repeat(14, minmax(40px, 1fr)); /* 最小幅を設定して切れないように */
+      grid-template-columns: repeat(14, 1fr);
       grid-template-rows: repeat(4, 60px);
       gap: 5px;
       padding: 10px;
@@ -123,14 +123,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start; /* 上揃えに変更 */
+      justify-content: center;
       cursor: pointer;
       transition: transform 0.2s;
       overflow: hidden;
-      padding-top: 5px; /* 上の余白を追加 */
     }
     .keyboard-button img {
-      width: 80%;
+      width: 100%;
       height: auto;
       object-fit: cover;
       border-radius: 5px;
@@ -142,15 +141,16 @@
 
     /* iPhone対応のサイズ調整 */
     @media (max-width: 768px) {
-      .keyboard-container {
-        grid-template-columns: repeat(14, minmax(35px, 1fr)); /* iPhone用にさらに最小幅を調整 */
+      .field-slot, .field-card {
+        width: calc((100vw - 70px) / 8);
+        height: calc(((100vw - 70px) / 8) * 1.33);
       }
-      .keyboard-button {
-        max-width: 50px;
-        padding-top: 3px;
+      .field-box {
+        gap: 6px;
+        padding: 6px;
       }
-      .keyboard-button img {
-        width: 75%;
+      .field-row {
+        gap: 4px;
       }
     }
   </style>
