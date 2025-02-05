@@ -138,6 +138,11 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       overflow: hidden;
       cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .field-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     .field-card img {
       width: 100%;
@@ -162,32 +167,241 @@
       margin: 0 auto;
       box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
       overflow-x: auto;
-      position: relative;
     }
-    .save-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #ff9900;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+    .keyboard-button {
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: transform 0.2s;
+      overflow: hidden;
     }
-    .save-button:hover {
-      background-color: #cc7700;
+    .keyboard-button img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .keyboard-button:hover {
+      transform: scale(1.05);
+      background-color: #ddd;
+    }
+    @media (max-width: 768px) {
+      .field-box {
+        grid-template-rows: repeat(4, 60px);
+        width: calc(100% - 10px);
+      }
+      .field-slot, .field-card {
+        width: calc((100vw - 60px) / 8);
+        height: calc(((100vw - 60px) / 8) * 1.33);
+      }
+      .keyboard-container {
+        grid-template-columns: repeat(14, minmax(20px, 1fr));
+        grid-template-rows: repeat(4, 60px);
+        gap: 5px;
+        width: 100vw;
+        padding: 5px;
+        box-sizing: border-box;
+        overflow-x: auto;
+      }
+      .keyboard-button {
+        width: 100%;
+        height: 100%;
+      }
+      .keyboard-button img {
+        width: 100%;
+        height: auto;
+      }
     }
   </style>
 </head>
 <body>
   <div class="menu-bar">
-    <p class="menu-title">ステップキーボード</p>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="menu-popup" id="menu-popup">
+      <p class="menu-title">ステップキーボード</p>
+      <button onclick="window.location.href='index.html'">カードライブラリーへ戻る</button>
+      <button onclick="window.location.href='https://noritap.github.io/tapdance-cardgame/'">タイトル画面に戻る</button>
+      <button onclick="saveCombination()">保存</button>
+      <button onclick="window.location.href='practice.html'">練習モード</button>
+      <button onclick="window.location.href='https://noritap.github.io/tapdance-cardgame2/'">ゲーム画面へ</button>
+    </div>
   </div>
 
-  <div class="keyboard-container" id="keyboard-container">
-    <button class="save-button" onclick="saveCombination()">保存</button>
+  <div class="pattern-selector">
+    <label for="pattern">フィールドパターン:</label>
+    <select id="pattern" onchange="updateFieldPattern()">
+      <option value="4">初心者 (4枚)</option>
+      <option value="8">中級者 (8枚)</option>
+      <option value="16">上級者 (16枚)</option>
+      <option value="custom">カスタム</option>
+    </select>
+    <input type="number" id="custom-columns" min="1" max="16" value="8" style="display:none;" onchange="updateFieldPattern()">
   </div>
+
+  <div class="action-buttons">
+    <button class="action-button" onclick="undoLastAction()">やり直し</button>
+    <button class="action-button" onclick="resetField()">すべてクリア</button>
+  </div>
+
+  <div class="field-wrapper">
+    <div class="field-box" id="field-box">
+      <div class="field-row"></div>
+      <div class="field-row"></div>
+      <div class="field-row"></div>
+      <div class="field-row"></div>
+    </div>
+  </div>
+
+  <div class="keyboard-container" id="keyboard-container"></div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu-popup');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    fetch('./tap_dance_card_data_updated.json')
+      .then(response => response.json())
+      .then(data => {
+        window.cardData = data;
+        createKeyboard();
+        mapCardsToButtons(data);
+        updateFieldPattern();
+      })
+      .catch(error => console.error('データの読み込みに失敗しました:', error));
+
+    const fieldBox = document.getElementById('field-box');
+    let currentColumns = 8;
+    const actionHistory = [];
+
+    function createKeyboard() {
+      const rows = ['A', 'B', 'C', 'D'];
+      const columns = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+      const keyboardContainer = document.getElementById('keyboard-container');
+
+      rows.forEach(row => {
+        columns.forEach(col => {
+          const button = document.createElement('div');
+          button.classList.add('keyboard-button');
+          button.dataset.label = `${row}${col}`;
+          keyboardContainer.appendChild(button);
+        });
+      });
+    }
+
+    const buttonMapping = {
+      'A1': 3, 'A2': 4, 'A3': 5, 'A4': 6, 'A5': 7, 'A6': 8, 'A7': 9, 'A8': 16, 'A9': 15, 'A10': 14, 'A11': 13, 'A12': 12, 'A13': 11, 'A14': 10,
+      'B1': 31, 'B2': 32, 'B3': 33, 'B4': 29, 'B5': 34, 'B6': 35, 'B7': 36, 'B8': 42, 'B9': 41, 'B10': 40, 'B11': 30, 'B12': 39, 'B13': 38, 'B14': 37,
+      'C1': 17, 'C2': 18, 'C3': 19, 'C4': 1, 'C5': 20, 'C6': 21, 'C7': 22, 'C8': 28, 'C9': 27, 'C10': 26, 'C11': 1, 'C12': 25, 'C13': 24, 'C14': 23,
+      'D1': 43, 'D2': 44, 'D3': 45, 'D4': 2, 'D5': 46, 'D6': 47, 'D7': 48, 'D8': 54, 'D9': 53, 'D10': 53, 'D11': 2, 'D12': 51, 'D13': 50, 'D14': 49
+    };
+
+    function mapCardsToButtons(cards) {
+      document.querySelectorAll('.keyboard-button').forEach(button => {
+        const cardId = buttonMapping[button.dataset.label];
+        const card = cards.find(c => c.カードID === cardId);
+
+        if (card) {
+          const img = document.createElement('img');
+          img.src = card.画像;
+          img.alt = card.カード名;
+          button.appendChild(img);
+
+          button.addEventListener('click', () => addCardToField(card));
+        }
+      });
+    }
+
+    function addCardToField(card) {
+      const rows = fieldBox.querySelectorAll('.field-row');
+      for (let row of rows) {
+        const slots = row.querySelectorAll('.field-slot');
+        for (let slot of slots) {
+          if (!slot.hasChildNodes()) {
+            const cardElement = document.createElement('div');
+            cardElement.classList.add('field-card');
+
+            const img = document.createElement('img');
+            img.src = card.画像;
+            img.alt = card.カード名;
+
+            cardElement.appendChild(img);
+            cardElement.addEventListener('click', () => removeCardFromField(cardElement, slot));
+
+            slot.replaceWith(cardElement);
+            actionHistory.push({ action: 'add', element: cardElement, slot: slot });
+            return;
+          }
+        }
+      }
+    }
+
+    function removeCardFromField(cardElement, slot) {
+      const emptySlot = document.createElement('div');
+      emptySlot.classList.add('field-slot');
+      cardElement.replaceWith(emptySlot);
+      actionHistory.push({ action: 'remove', element: emptySlot, slot: cardElement });
+    }
+
+    function undoLastAction() {
+      const lastAction = actionHistory.pop();
+      if (lastAction) {
+        if (lastAction.action === 'add') {
+          lastAction.element.replaceWith(lastAction.slot);
+        } else if (lastAction.action === 'remove') {
+          lastAction.slot.replaceWith(lastAction.element);
+        }
+      }
+    }
+
+    function resetField() {
+      const rows = fieldBox.querySelectorAll('.field-row');
+      rows.forEach(row => {
+        row.innerHTML = '';
+        for (let i = 0; i < currentColumns; i++) {
+          const slot = document.createElement('div');
+          slot.classList.add('field-slot');
+          row.appendChild(slot);
+        }
+      });
+      actionHistory.length = 0;
+    }
+
+    function updateFieldPattern() {
+      const pattern = document.getElementById('pattern').value;
+      const customInput = document.getElementById('custom-columns');
+
+      if (pattern === 'custom') {
+        customInput.style.display = 'inline';
+        currentColumns = parseInt(customInput.value);
+      } else {
+        customInput.style.display = 'none';
+        currentColumns = parseInt(pattern);
+      }
+
+      const rows = fieldBox.querySelectorAll('.field-row');
+      rows.forEach(row => {
+        row.innerHTML = '';
+        row.style.gridTemplateColumns = `repeat(${currentColumns}, 1fr)`;
+        for (let i = 0; i < currentColumns; i++) {
+          const slot = document.createElement('div');
+          slot.classList.add('field-slot');
+          row.appendChild(slot);
+        }
+      });
+    }
+
+    function saveCombination() {
+      const cards = Array.from(document.querySelectorAll('.field-card img')).map(img => img.src);
+      localStorage.setItem('savedCombination', JSON.stringify(cards));
+      alert('カードの並びを保存しました！');
+    }
+  </script>
 </body>
 </html>
