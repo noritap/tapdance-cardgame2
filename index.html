@@ -23,6 +23,7 @@
       justify-content: center;
       background-color: #444;
       padding: 10px 0;
+      gap: 10px;
     }
     .menu-button {
       background-color: #555;
@@ -80,9 +81,8 @@
     }
     .back-to-home {
       position: fixed;
-      top: 50%;
+      bottom: 20px;
       right: 20px;
-      transform: translateY(-50%);
       background-color: #ffcc00;
       color: black;
       border: none;
@@ -95,7 +95,7 @@
     }
     .back-to-home:hover {
       background-color: #ffaa00;
-      transform: translateY(-50%) scale(1.1);
+      transform: scale(1.1);
     }
   </style>
 </head>
@@ -103,6 +103,8 @@
   <h1>カードライブラリー</h1>
   <div class="menu-bar">
     <button class="menu-button" onclick="window.location.href='step_keyboard.html'">ステップキーボードへ</button>
+    <button class="menu-button" onclick="window.location.href='tap_master.html'">Tap Master</button>
+    <button class="menu-button" onclick="window.location.href='tap_no_tatujin.html'">タップの達人</button>
   </div>
 
   <div id="card-container"></div>
