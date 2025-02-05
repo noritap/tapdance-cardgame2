@@ -19,14 +19,37 @@
       overflow: hidden;
     }
     .menu-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #444;
-      padding: 10px;
-      gap: 10px;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 1000;
     }
-    .menu-button {
+    .menu-toggle {
+      background-color: #555;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .menu-toggle:hover {
+      background-color: #777;
+    }
+    .menu-popup {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background-color: #444;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+    }
+    .menu-popup button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
       background-color: #555;
       color: white;
       border: none;
@@ -35,13 +58,14 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
-    .menu-button:hover {
+    .menu-popup button:hover {
       background-color: #777;
     }
     .menu-title {
       color: white;
       font-size: 1.2rem;
       margin: 0;
+      text-align: center;
     }
     .pattern-selector {
       display: flex;
@@ -193,12 +217,15 @@
 </head>
 <body>
   <div class="menu-bar">
-    <p class="menu-title">ステップキーボード</p>
-    <button class="menu-button" onclick="window.location.href='index.html'">カードライブラリーへ戻る</button>
-    <button class="menu-button" onclick="window.location.href='https://noritap.github.io/tapdance-cardgame/'">タイトル画面に戻る</button>
-    <button class="menu-button" onclick="saveCombination()">保存</button>
-    <button class="menu-button" onclick="window.location.href='practice.html'">練習モード</button>
-    <button class="menu-button" onclick="window.location.href='https://noritap.github.io/tapdance-cardgame2/'">ゲーム画面へ</button>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="menu-popup" id="menu-popup">
+      <p class="menu-title">ステップキーボード</p>
+      <button onclick="window.location.href='index.html'">カードライブラリーへ戻る</button>
+      <button onclick="window.location.href='https://noritap.github.io/tapdance-cardgame/'">タイトル画面に戻る</button>
+      <button onclick="saveCombination()">保存</button>
+      <button onclick="window.location.href='practice.html'">練習モード</button>
+      <button onclick="window.location.href='https://noritap.github.io/tapdance-cardgame2/'">ゲーム画面へ</button>
+    </div>
   </div>
 
   <div class="pattern-selector">
@@ -229,6 +256,11 @@
   <div class="keyboard-container" id="keyboard-container"></div>
 
   <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu-popup');
+      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
     fetch('./tap_dance_card_data_updated.json')
       .then(response => response.json())
       .then(data => {
