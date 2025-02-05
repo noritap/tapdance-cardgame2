@@ -47,8 +47,8 @@
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       padding: 10px;
-      max-width: 300px;
-      width: 80%;
+      width: 250px; /* 固定幅でボタンが隠れないように調整 */
+      z-index: 1001; /* 他の要素の上に表示 */
     }
     .menu-popup button {
       display: block;
@@ -272,7 +272,11 @@
     function toggleMenu() {
       const menu = document.getElementById('menu-popup');
       const toggleButton = document.querySelector('.menu-toggle');
-      menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+      if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+      } else {
+        menu.style.display = 'block';
+      }
       toggleButton.classList.toggle('active');
     }
 
